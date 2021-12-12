@@ -1,0 +1,2 @@
+# SquidGame
+A SquidGame AI

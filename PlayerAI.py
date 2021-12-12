@@ -68,10 +68,11 @@ class PlayerAI(BaseAI):
         You may adjust the input variables as you wish (though it is not necessary). Output has to be (x,y) coordinates.
         
         """
-        optimal_result = self.mini_max_get_trap(grid, depth = 5, maximizing_player = True)
-        #print(optimal_result)
+        optimal_result = self.mini_max_get_trap(grid, depth = 3, maximizing_player = True)
         optimal_state = optimal_result[0]
-        #print(optimal_state)
+
+        if not optimal_state:
+            return random.choice(grid.getAvailableCells())
 
         rows, cols = optimal_state.dim, optimal_state.dim
         for i in range(rows):
@@ -85,16 +86,34 @@ class PlayerAI(BaseAI):
         return None
 
     def mini_max_get_trap(self, grid, depth, maximizing_player):
+        opponent_pos = grid.find(3 - self.player_num)
+        opponent_valid_neighbors = grid.get_neighbors(opponent_pos, True)
+        if not opponent_valid_neighbors:
+            eval_result = (grid, self.IS(grid, 3 - self.player_num))
+            return eval_result
+
+
+
         # Base case, evaluate leaf nodes.
         if depth == 0:
+            print("DEP = 0")
+            grid.print_grid()
+            print()
             eval_result = (grid, self.IS(grid, 3 - self.player_num))
-            #print(eval_result)
+            print("Score: ", eval_result[1])
             return eval_result
 
         # find available positions for throwing traps
         opponent_pos = grid.find(3 - self.player_num)
         opponent_valid_neighbors = grid.get_neighbors(opponent_pos, True)
+        print("------DEBUG")
+        print("Current Depth: ", depth)
+        print("Current Valid Trap: ", opponent_valid_neighbors)
+        grid.print_grid()
+        print("------DEBUG DONE -------")
 
+
+        '''
         if not opponent_valid_neighbors:
             #print("op: ",opponent_pos)
             #print("ava op: ", opponent_valid_neighbors)
@@ -102,7 +121,7 @@ class PlayerAI(BaseAI):
             grid_copy = grid.clone()
             grid_copy.trap(random.choice(grid.getAvailableCells()))
             return (grid_copy, self.IS(grid_copy, 3 - self.player_num))
-
+        '''
         #print(opponent_valid_neighbors)
         if maximizing_player:
             max_eval = (None, float('-inf'))
@@ -115,7 +134,7 @@ class PlayerAI(BaseAI):
                 eval_result = self.mini_max_get_trap(grid_copy, depth - 1, False)
                 eval_grid = eval_result[0]
                 eval_score = eval_result[1]
-                if max_eval[1] <= eval_score:
+                if max_eval[1] < eval_score:
                     max_eval = eval_result
             return max_eval
 
@@ -130,7 +149,7 @@ class PlayerAI(BaseAI):
                 eval_result = self.mini_max_get_trap(grid_copy, depth - 1, True)
                 eval_grid = eval_result[0]
                 eval_score = eval_result[1]
-                if eval_score <= min_eval[1]:
+                if eval_score < min_eval[1]:
                     min_eval = eval_result
 
             return min_eval

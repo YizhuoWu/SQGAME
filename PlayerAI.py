@@ -45,7 +45,7 @@ class PlayerAI(BaseAI):
 
         alpha, beta = float('-inf'), float('inf')
         maximizing_player = True
-        depth = 3
+        depth = 5
         optimal_result = self.mini_max_get_move(grid, depth, alpha, beta, maximizing_player)
         optimal_state = optimal_result[0]
         return optimal_state
@@ -77,7 +77,7 @@ class PlayerAI(BaseAI):
         """
         alpha, beta = float('-inf'), float('inf')
         maximizing_player = True
-        depth = 3
+        depth = 5
         optimal_result = self.mini_max_get_trap(grid, depth, alpha, beta, maximizing_player)
         optimal_state = optimal_result[0]
 

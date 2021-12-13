@@ -107,23 +107,14 @@ class PlayerAI(BaseAI):
                 random_pos = random.choice(grid.getAvailableCells())
             return random_pos
 
-        #return result
+        return random.choice(grid.getAvailableCells())
 
     def mini_max_get_move(self, grid, depth, alpha, beta, maximizing_player):
         player_pos = grid.find(self.player_num)
         player_valid_neighbors = grid.get_neighbors(player_pos, True)
-        #print("DEP = : ",depth)
-        #print(player_valid_neighbors)
 
-        '''
-        if not player_valid_neighbors:
-            eval_result = (grid, self.OCLS(grid, self.player_num))
-            #print("no move: score: ",eval_result[1])
-            return eval_result
-        '''
         if depth == 0:
             eval_result = (grid, self.OCLS(grid, self.player_num))
-            #print("0: score: ",eval_result[1])
             return eval_result
 
         if maximizing_player:
@@ -187,13 +178,7 @@ class PlayerAI(BaseAI):
         # find available positions for throwing traps
         opponent_pos = grid.find(3 - self.player_num)
         opponent_valid_neighbors = grid.get_neighbors(opponent_pos, True)
-        #print("------DEBUG")
-        #print("Current Depth: ", depth)
-        #print("Current Valid Trap: ", opponent_valid_neighbors)
-        #grid.print_grid()
-        #print("------DEBUG DONE -------")
 
-        #print(opponent_valid_neighbors)
         if maximizing_player:
             max_eval = (None, float('-inf'))
 
